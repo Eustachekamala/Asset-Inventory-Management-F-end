@@ -3,10 +3,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../redux/userSlice';
 
 function Navbar() {
-  const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const userInfo = useSelector((state) => state.user.userInfo); 
+  const role = useSelector((state) => state.user.role); 
 
-  const handleLogout = () => {
+  const handleLogout = (e) => {
+    e.preventDefault(); 
     dispatch(logout());
   };
 
@@ -19,14 +21,22 @@ function Navbar() {
         </div>
         <nav>
           <ul className="flex space-x-4 items-center">
-            <li><Link to="/" className="text-gray-600 hover:text-blue-500">Home</Link></li>
-            <li><Link to="/assets" className="text-gray-600 hover:text-blue-500">Assets</Link></li>
-            <li><Link to="/reports" className="text-gray-600 hover:text-blue-500">Reports</Link></li>
-            <li><Link to="/users" className="text-gray-600 hover:text-blue-500">Users</Link></li>
-            <li><Link to="/support" className="text-gray-600 hover:text-blue-500">Support</Link></li>
-            {user.userInfo ? (
+            <li>
+              <Link to="/" className="text-gray-600 hover:text-blue-500">Home</Link>
+            </li>
+            {role === 'Admin' && (
               <li>
-                <Link to="/logout" onClick={handleLogout}>
+                <Link to="/assets" className="text-gray-600 hover:text-blue-500">Assets</Link>
+              </li>
+            )}
+            {role === 'Employee' && (
+              <li>
+                <Link to="/requests" className="text-gray-600 hover:text-blue-500">My Requests</Link>
+              </li>
+            )}
+            {userInfo ? (
+              <li>
+                <Link to="/" onClick={handleLogout}>
                   <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                     Logout
                   </button>
