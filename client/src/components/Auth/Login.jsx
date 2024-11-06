@@ -7,6 +7,7 @@ import axios from 'axios';
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);
   const dispatch = useDispatch();
 
   const handleLogin = async (e) => {
@@ -16,6 +17,7 @@ const Login = () => {
       dispatch(login({ userInfo: response.data.userInfo, role: response.data.role }));
       // Redirect or update state accordingly
     } catch (error) {
+      setError('Invalid username or password');
       console.error('Login failed:', error);
     }
   };
@@ -25,6 +27,7 @@ const Login = () => {
       <form onSubmit={handleLogin} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-80">
         <h2 className="mb-6 text-lg font-bold text-center">Login</h2>
         <div className="mb-4">
+          {error && <p className="text-red-500 text-sm">{error}</p>}
           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
             Username
           </label>
