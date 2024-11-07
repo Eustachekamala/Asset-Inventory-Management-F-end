@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { login } from '../redux/userSlice';
+import { login } from '../redux/authSlice';
 import { useNavigate } from 'react-router-dom';
 import AssetForm from './Asset/AssetForm';
 

@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { login } from '../../redux/userSlice';
+import { login } from '../../redux/authSlice';
 import axios from 'axios';
 
 const Login = () => {
@@ -10,16 +10,26 @@ const Login = () => {
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post('/api/login', { username, password });
-      dispatch(login({ userInfo: response.data.userInfo, role: response.data.role }));
-      // Redirect or update state accordingly
-    } catch (error) {
-      setError('Invalid username or password');
-      console.error('Login failed:', error);
-    }
+  // const handleLogin = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const response = await axios.post('/api/login', { username, password });
+  //     dispatch(login({ userInfo: response.data.userInfo, role: response.data.role }));
+  //     // Redirect or update state accordingly
+  //   } catch (error) {
+  //     setError('Invalid username or password');
+  //     console.error('Login failed:', error);
+  //   }
+  // };
+  const handleLogin = () => {
+    // Mock authentication logic (replace with actual logic)
+    const mockUser = {
+      id: 1,
+      username: username,
+      role: username === 'admin' ? 'Admin' : username === 'procurement' ? 'Procurement Manager' : 'Employee',
+    };
+
+    dispatch(login(mockUser));
   };
 
   return (
@@ -35,6 +45,8 @@ const Login = () => {
             type="text"
             id="username"
             placeholder="Username"
+            value={username}
+            
             onChange={(e) => setUsername(e.target.value)}
             required
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -48,6 +60,7 @@ const Login = () => {
             type="password"
             id="password"
             placeholder="Password"
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
