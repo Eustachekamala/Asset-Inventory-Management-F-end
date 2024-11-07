@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import axios from "axios";
-import { login } from "../../redux/userSlice";
+import { login } from "../../redux/authSlice";
 
 function AssetForm() {
   const [assetName, setAssetName] = useState("");
