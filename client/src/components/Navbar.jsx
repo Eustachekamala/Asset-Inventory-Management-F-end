@@ -1,16 +1,28 @@
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../redux/userSlice';
+import { logout } from '../redux/authSlice';
 
 function Navbar() {
   const dispatch = useDispatch();
-  const userInfo = useSelector((state) => state.user.userInfo); 
-  const role = useSelector((state) => state.user.role); 
+  // const userInfo = useSelector((state) => state.user.userInfo); 
+  // const role = useSelector((state) => state.user.role); 
+  const userInfo = useSelector((state) => state.user?.userInfo);  // Safe access
+  const role = useSelector((state) => state.user?.role);
+  
 
   const handleLogout = (e) => {
     e.preventDefault(); 
     dispatch(logout());
   };
+  // if (!userInfo && !role) {
+  //   return (
+  //     <header className="bg-white shadow">
+  //       <div className="container mx-auto p-4">
+  //         <p>Loading...</p> {/* Show loading indicator if user data is not available */}
+  //       </div>
+  //     </header>
+  //   );
+  // }
 
   return (
     <header className="bg-white shadow">
