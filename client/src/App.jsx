@@ -1,3 +1,5 @@
+// src/App.js
+import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
@@ -32,4 +34,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
