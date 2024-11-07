@@ -70,7 +70,6 @@ function App() {
           />
           <Route path="/unauthorized" element={<Unauthorized />} />
           
-          {/* Catch-all Route for 404 Not Found */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
