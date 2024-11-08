@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { login } from '../../redux/authSlice';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Login = () => {
@@ -9,26 +10,45 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
-  // const handleLogin = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const response = await axios.post('/api/login', { username, password });
-  //     dispatch(login({ userInfo: response.data.userInfo, role: response.data.role }));
-  //     // Redirect or update state accordingly
-  //   } catch (error) {
-  //     setError('Invalid username or password');
-  //     console.error('Login failed:', error);
-  //   }
-  // };
-  const handleLogin = () => {
-    // Mock authentication logic (replace with actual logic)
-    const mockUser = {
-      id: 1,
-      username: username,
-      role: username === 'admin' ? 'Admin' : username === 'procurement' ? 'Procurement Manager' : 'Employee',
-    };
+  const navigate = useNavigate(); // Hook for navigation
 
-    dispatch(login(mockUser));
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:5000/api/login', { username, password });
+      const userInfo = response.data.userInfo; 
+      const role = response.data.role;
+
+      // Dispatch the login action
+      dispatch(login({ userInfo, role }));
+
+      // Navigate based on user role
+      if (role === 'Admin') {
+        navigate('/admin');
+      } else if (role === 'Procurement_manager') {
+        navigate('/procurement');
+      } else if (role === 'Employee') {
+        navigate('/employee');
+      } else {
+        navigate('/');
+      }
+    } catch (error) {
+      if (error.response) {
+        // Server responded with a status other than 200 range
+        if (error.response.status === 401) {
+          setError('Invalid username or password');  // Specific message for 401
+        } else {
+          setError('An error occurred. Please try again.');  // General error message
+        }
+      } else if (error.request) {
+        // The request was made but no response was received
+        setError('No response from server. Please check your network connection.');
+      } else {
+        // An error occurred while setting up the request
+        setError('Error: ' + error.message);
+      }
+      console.error('Login failed:', error);
+    }
   };
 
   return (
@@ -45,7 +65,6 @@ const Login = () => {
             id="username"
             placeholder="Username"
             value={username}
-            
             onChange={(e) => setUsername(e.target.value)}
             required
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
