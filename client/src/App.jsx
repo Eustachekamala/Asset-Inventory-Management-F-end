@@ -14,6 +14,7 @@ import RequestForm from './components/Request/RequestForm';
 import AdminDashboard from './components/AdminDashboard';
 import { useSelector } from 'react-redux';
 import Unauthorized from './components/Unauthorized';
+import RequestStatus from './components/Request/RequestStatus';
 
 const PrivateRoute = ({ element, role, ...rest }) => {
   const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -37,6 +38,9 @@ function App() {
           {/* Public Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+
+          {/*Public Routes for Request Status */}
+          <Route path="/request-status" element={<RequestStatus />} />
 
           {/* Protected Routes for specific roles */}
           <Route
