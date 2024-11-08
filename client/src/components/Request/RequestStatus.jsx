@@ -8,24 +8,32 @@ const RequestStatusTracking = () => {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const response = await fetch('/api/requests'); 
+        const response = await fetch('http://localhost:5000/api/requests');
+        
+        // Check the response status
         if (!response.ok) {
-            throw new Error(`Network response was not ok. Status: ${response.status}`);
+          throw new Error(`Network response was not ok. Status: ${response.status}`);
         }
         
-        // Ensure the response is in JSON format
+        // Log the response content type to ensure it's JSON
         const contentType = response.headers.get("content-type");
+        console.log('Response content type:', contentType);  // Log the content type
+        
+        // Check if the response is JSON
         if (contentType && contentType.includes("application/json")) {
           const data = await response.json();
           setRequests(data);
         } else {
+          // Log the response body to check what's returned
+          const text = await response.text();
+          console.error('Unexpected response:', text);
           throw new Error('Expected JSON response, but got something else.');
         }
       } catch (err) {
-        setError(err.message); 
-        console.error('Fetch error:', err); 
+        setError(err.message);
+        console.error('Fetch error:', err);
       } finally {
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
@@ -47,24 +55,34 @@ const RequestStatusTracking = () => {
         <thead>
           <tr className="bg-gray-200">
             <th className="py-2 px-4 border">Request ID</th>
-            <th className="py-2 px-4 border">User</th>
-            <th className="py-2 px-4 border">Asset</th>
+            <th className="py-2 px-4 border">User ID</th>
+            <th className="py-2 px-4 border">Asset ID</th>
             <th className="py-2 px-4 border">Request Type</th>
+            <th className="py-2 px-4 border">Reason</th>
+            <th className="py-2 px-4 border">Quantity</th>
+            <th className="py-2 px-4 border">Urgency</th>
             <th className="py-2 px-4 border">Status</th>
+            <th className="py-2 px-4 border">Created At</th>
+            <th className="py-2 px-4 border">Updated At</th>
           </tr>
         </thead>
         <tbody>
-          {requests.map(({ request_id, user_id, asset_id, request_type, status }) => (
-            <tr key={request_id}>
-              <td className="py-2 px-4 border">{request_id}</td>
+          {requests.map(({ id, user_id, asset_id, request_type, reason, quantity, urgency, status, created_at, updated_at }) => (
+            <tr key={id}>
+              <td className="py-2 px-4 border">{id}</td>
               <td className="py-2 px-4 border">{user_id}</td>
               <td className="py-2 px-4 border">{asset_id ?? 'N/A'}</td>
               <td className="py-2 px-4 border">{request_type}</td>
+              <td className="py-2 px-4 border">{reason ?? 'N/A'}</td>
+              <td className="py-2 px-4 border">{quantity}</td>
+              <td className="py-2 px-4 border">{urgency}</td>
               <td className="py-2 px-4 border">
-                <span className={`status ${status?.toLowerCase()} text-white py-1 px-2 rounded`}>
+                <span className={`status ${status?.toLowerCase()} text-black py-1 px-2 rounded`}>
                   {status}
                 </span>
               </td>
+              <td className="py-2 px-4 border">{new Date(created_at).toLocaleString()}</td>
+              <td className="py-2 px-4 border">{new Date(updated_at).toLocaleString()}</td>
             </tr>
           ))}
         </tbody>
